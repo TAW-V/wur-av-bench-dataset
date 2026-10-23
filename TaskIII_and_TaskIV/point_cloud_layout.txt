@@ -1,0 +1,33 @@
+Layout of the viewpoint data
+
+Every viewpoint of a plant has three files with the same time stamp (nanoseconds):
+
+    <stamp>_color.jpeg   colour image, 960 x 540 pixels
+    <stamp>_b.pcd        organized point cloud, aligned to the colour image
+    <stamp>_pose.txt     camera pose
+
+
+Point cloud (<stamp>_b.pcd)
+
+- Binary PCD (version 0.7) with the fields x y z rgb: x, y and z as float32 in metres, rgb as a
+  packed uint32 colour (0x00RRGGBB).
+- Organized, with one point per image pixel (518400 points). The header says WIDTH 540 and
+  HEIGHT 960, but these are swapped: the points are stored row by row as 540 rows of 960 points,
+  in the same order as the image pixels.
+- Coordinates are in the camera optical frame: x right, y down, z forward along the viewing
+  direction.
+- Pixels without depth are NaN.
+- The VIEWPOINT field of the header holds the same camera pose as <stamp>_pose.txt, in the
+  order tx ty tz qw qx qy qz.
+
+
+Camera pose (<stamp>_pose.txt)
+
+- A printed ROS TransformStamped with frame_id "world" and child_frame_id
+  "camera_color_optical_frame".
+- The translation (x, y, z, in metres) and the rotation quaternion (x, y, z, w) give the pose of
+  the camera in the world frame: a point p in the camera optical frame lies at R p + t in the
+  world frame, with R the rotation matrix of the quaternion and t the translation.
+- The world frame is the frame of the ground truth in gt/ and of detection_filter_params.json.
+
+See camera_intrinsics.txt for the projection between points and pixels.

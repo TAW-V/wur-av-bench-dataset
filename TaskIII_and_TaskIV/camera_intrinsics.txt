@@ -1,0 +1,18 @@
+Camera intrinsics of the viewpoint data
+
+Camera:      Intel RealSense L515, colour camera
+Image size:  960 x 540 pixels (width x height), the same for all 25 plants
+
+fx = 685.5028
+fy = 685.6410
+cx = 485.3596
+cy = 270.7331
+
+Pinhole model without distortion terms. A point (x, y, z) in the camera optical frame
+(x right, y down, z forward, in metres) projects to the pixel
+
+    u = fx * x / z + cx    (column)
+    v = fy * y / z + cy    (row)
+
+The values were estimated from the organized point clouds, which are aligned to the colour
+images. They project each point onto its own pixel with a median error of about 0.25 pixel.
